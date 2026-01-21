@@ -1,0 +1,36 @@
+PASOS PARA CONSTRUIR IMAGEN CON GITHUB ACTIONS:
+
+1. CREAR REPOSITORIO GITHUB
+   - Ve a github.com y crea nuevo repositorio (público o privado)
+   - Nombre sugerido: "comfyui-zimage-docker"
+
+2. SUBIR ARCHIVOS
+   - Sube estos 3 archivos a tu repositorio:
+     * Dockerfile
+     * init_comfy.sh
+     * .github/workflows/docker-build.yml
+
+3. CONFIGURAR SECRETS EN GITHUB
+   - Ve a: Settings > Secrets and variables > Actions > New repository secret
+   - Crea 2 secrets:
+     * DOCKER_USERNAME = tu_usuario_dockerhub
+     * DOCKER_PASSWORD = tu_password_dockerhub
+   
+   (Si no tienes Docker Hub, créate cuenta gratis en hub.docker.com)
+
+4. EJECUTAR BUILD
+   - Ve a: Actions > Build and Push ComfyUI Docker Image
+   - Click "Run workflow" > "Run workflow"
+   - Espera ~30-60 minutos
+
+5. USAR LA IMAGEN
+   - Una vez terminado, tu imagen estará en:
+     docker.io/TU_USUARIO/comfyui-zimage:latest
+   
+   - Actualiza el YAML de Akash:
+     image: TU_USUARIO/comfyui-zimage:latest
+
+NOTAS:
+- El build solo se hace UNA vez
+- Después todos los deployments arrancan rápido con el modelo incluido
+- Si cambias el Dockerfile, solo haz push y se reconstruye automáticamente
