@@ -28,6 +28,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/comfyui-zimage:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/comfyui-zimage-uncensored:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
