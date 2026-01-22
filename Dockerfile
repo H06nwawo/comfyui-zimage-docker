@@ -20,7 +20,14 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git . && \
 
 RUN mkdir -p /app/models/diffusion_models && \
     mkdir -p /app/models/text_encoders && \
-    mkdir -p /app/models/vae
+    mkdir -p /app/models/vae && \
+    mkdir -p /app/custom_nodes
+
+# Install SeedVR2 custom node
+RUN cd /app/custom_nodes && \
+    git clone https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler.git && \
+    cd ComfyUI-SeedVR2_VideoUpscaler && \
+    pip3 install --no-cache-dir -r requirements.txt
 
 COPY init_comfy.sh /app/init_comfy.sh
 RUN chmod +x /app/init_comfy.sh

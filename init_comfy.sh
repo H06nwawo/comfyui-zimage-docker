@@ -39,6 +39,15 @@ hf_hub_download(
     token=token if token else None
 )
 
+print("Downloading SeedVR2 model...")
+os.makedirs("/tmp/seedvr2", exist_ok=True)
+hf_hub_download(
+    repo_id="numz/SeedVR2",
+    filename="seedvr2_bf16.safetensors",
+    local_dir="/tmp/seedvr2",
+    token=token if token else None
+)
+
 print("Downloading uncensored LoRA from Civitai...")
 os.makedirs("/tmp/loras", exist_ok=True)
 lora_url = f"https://civitai.com/api/download/models/2474435?type=Model&format=SafeTensor&token={civitai_token}"
@@ -51,6 +60,7 @@ os.makedirs("/app/models/diffusion_models", exist_ok=True)
 os.makedirs("/app/models/clip", exist_ok=True)
 os.makedirs("/app/models/vae", exist_ok=True)
 os.makedirs("/app/models/loras", exist_ok=True)
+os.makedirs("/app/models/upscale_models", exist_ok=True)
 
 shutil.move("/tmp/models/split_files/diffusion_models/z_image_turbo_bf16.safetensors", 
             "/app/models/diffusion_models/z_image_turbo_bf16.safetensors")
@@ -60,6 +70,9 @@ shutil.move("/tmp/models/split_files/text_encoders/qwen_3_4b.safetensors",
 
 shutil.move("/tmp/models/split_files/vae/ae.safetensors", 
             "/app/models/vae/ae.safetensors")
+
+shutil.move("/tmp/seedvr2/seedvr2_bf16.safetensors",
+            "/app/models/upscale_models/seedvr2_bf16.safetensors")
 
 shutil.move("/tmp/loras/zimage_uncensored.safetensors",
             "/app/models/loras/zimage_uncensored.safetensors")
