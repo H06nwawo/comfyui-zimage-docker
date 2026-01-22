@@ -42,8 +42,8 @@ hf_hub_download(
 print("Downloading SeedVR2 model...")
 os.makedirs("/tmp/seedvr2", exist_ok=True)
 hf_hub_download(
-    repo_id="numz/SeedVR2",
-    filename="seedvr2_bf16.safetensors",
+    repo_id="numz/SeedVR2_comfyUI",
+    filename="SeedVR2_bf16.safetensors",
     local_dir="/tmp/seedvr2",
     token=token if token else None
 )
@@ -71,8 +71,8 @@ shutil.move("/tmp/models/split_files/text_encoders/qwen_3_4b.safetensors",
 shutil.move("/tmp/models/split_files/vae/ae.safetensors", 
             "/app/models/vae/ae.safetensors")
 
-shutil.move("/tmp/seedvr2/seedvr2_bf16.safetensors",
-            "/app/models/upscale_models/seedvr2_bf16.safetensors")
+shutil.move("/tmp/seedvr2/SeedVR2_bf16.safetensors",
+            "/app/models/upscale_models/SeedVR2_bf16.safetensors")
 
 shutil.move("/tmp/loras/zimage_uncensored.safetensors",
             "/app/models/loras/zimage_uncensored.safetensors")
