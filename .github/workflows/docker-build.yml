@@ -31,3 +31,5 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/comfyui-zimage-uncensored:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            CIVITAI_API_KEY=${{ secrets.CIVITAI_API_KEY }}

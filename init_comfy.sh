@@ -13,6 +13,7 @@ import shutil
 import urllib.request
 
 token = os.environ.get('HUGGING_FACE_HUB_TOKEN', '')
+civitai_token = os.environ.get('CIVITAI_API_KEY', '')
 
 print("Downloading diffusion model...")
 hf_hub_download(
@@ -40,8 +41,10 @@ hf_hub_download(
 
 print("Downloading uncensored LoRA from Civitai...")
 os.makedirs("/tmp/loras", exist_ok=True)
-lora_url = "https://civitai.com/api/download/models/2621949?type=Model&format=SafeTensor"
-urllib.request.urlretrieve(lora_url, "/tmp/loras/zimage_uncensored.safetensors")
+lora_url = f"https://civitai.com/api/download/models/2474435?type=Model&format=SafeTensor&token={civitai_token}"
+req = urllib.request.Request(lora_url)
+with urllib.request.urlopen(req) as response, open("/tmp/loras/zimage_uncensored.safetensors", 'wb') as out_file:
+    out_file.write(response.read())
 
 # Move files to correct ComfyUI directories
 os.makedirs("/app/models/diffusion_models", exist_ok=True)

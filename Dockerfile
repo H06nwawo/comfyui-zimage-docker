@@ -25,6 +25,8 @@ RUN mkdir -p /app/models/diffusion_models && \
 COPY init_comfy.sh /app/init_comfy.sh
 RUN chmod +x /app/init_comfy.sh
 
+ARG CIVITAI_API_KEY
+ENV CIVITAI_API_KEY=${CIVITAI_API_KEY}
 ENV HUGGING_FACE_HUB_TOKEN=""
 
 EXPOSE 8188
