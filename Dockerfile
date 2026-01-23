@@ -16,22 +16,12 @@ WORKDIR /app
 
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git . && \
     pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 && \
-    pip3 install --no-cache-dir -r requirements.txt
+    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install --no-cache-dir websockets aiohttp
 
 RUN mkdir -p /app/models/diffusion_models && \
     mkdir -p /app/models/text_encoders && \
-    mkdir -p /app/models/vae && \
-    mkdir -p /app/custom_nodes
-
-# Install SeedVR2 custom node
-RUN cd /app/custom_nodes && \
-    git clone https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler.git && \
-    cd ComfyUI-SeedVR2_VideoUpscaler && \
-    pip3 install --no-cache-dir -r requirements.txt
-
-RUN pip3 install --no-cache-dir einops diffusers transformers accelerate
-
-RUN cd /app && python3 main.py --cpu --quick-test-for-ci
+    mkdir -p /app/models/vae
 
 COPY init_comfy.sh /app/init_comfy.sh
 RUN chmod +x /app/init_comfy.sh

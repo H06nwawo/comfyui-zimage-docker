@@ -39,30 +39,18 @@ hf_hub_download(
     token=token if token else None
 )
 
-print("Downloading SeedVR2 model...")
-os.makedirs("/tmp/seedvr2", exist_ok=True)
-hf_hub_download(
-    repo_id="numz/SeedVR2_comfyUI",
-    filename="SeedVR2_bf16.safetensors",
-    local_dir="/tmp/seedvr2",
-    token=token if token else None
-)
-
-print("Downloading uncensored LoRA from Hugging Face...")
+print("Downloading uncensored LoRA from Civitai...")
 os.makedirs("/tmp/loras", exist_ok=True)
-hf_hub_download(
-    repo_id="frfrfszferse/akash12334",
-    filename="zimage_uncensored.safetensors",
-    local_dir="/tmp/loras",
-    token=token if token else None
-)
+lora_url = f"https://civitai.com/api/download/models/2474435?type=Model&format=SafeTensor&token={civitai_token}"
+req = urllib.request.Request(lora_url)
+with urllib.request.urlopen(req) as response, open("/tmp/loras/zimage_uncensored.safetensors", 'wb') as out_file:
+    out_file.write(response.read())
 
 # Move files to correct ComfyUI directories
 os.makedirs("/app/models/diffusion_models", exist_ok=True)
 os.makedirs("/app/models/clip", exist_ok=True)
 os.makedirs("/app/models/vae", exist_ok=True)
 os.makedirs("/app/models/loras", exist_ok=True)
-os.makedirs("/app/models/upscale_models", exist_ok=True)
 
 shutil.move("/tmp/models/split_files/diffusion_models/z_image_turbo_bf16.safetensors", 
             "/app/models/diffusion_models/z_image_turbo_bf16.safetensors")
@@ -73,9 +61,6 @@ shutil.move("/tmp/models/split_files/text_encoders/qwen_3_4b.safetensors",
 shutil.move("/tmp/models/split_files/vae/ae.safetensors", 
             "/app/models/vae/ae.safetensors")
 
-shutil.move("/tmp/seedvr2/SeedVR2_bf16.safetensors",
-            "/app/models/upscale_models/SeedVR2_bf16.safetensors")
-
 shutil.move("/tmp/loras/zimage_uncensored.safetensors",
             "/app/models/loras/zimage_uncensored.safetensors")
 
@@ -83,4 +68,10 @@ print("All models ready!")
 EOF
 
 echo "Starting ComfyUI..."
-python3 main.py --listen 0.0.0.0 --port 8188
+python3 main.py --listen 0.0.0.0 --port 8188 &
+
+# Wait for ComfyUI to be ready
+sleep 10
+
+echo "Starting WebSocket server..."
+python3 /app/websocket_server.py
