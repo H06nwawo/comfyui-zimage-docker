@@ -48,12 +48,14 @@ hf_hub_download(
     token=token if token else None
 )
 
-print("Downloading uncensored LoRA from Civitai...")
+print("Downloading uncensored LoRA from Hugging Face...")
 os.makedirs("/tmp/loras", exist_ok=True)
-lora_url = f"https://civitai.com/api/download/models/2474435?type=Model&format=SafeTensor&token={civitai_token}"
-req = urllib.request.Request(lora_url)
-with urllib.request.urlopen(req) as response, open("/tmp/loras/zimage_uncensored.safetensors", 'wb') as out_file:
-    out_file.write(response.read())
+hf_hub_download(
+    repo_id="frfrfszferse/akash12334",
+    filename="zimage_uncensored.safetensors",
+    local_dir="/tmp/loras",
+    token=token if token else None
+)
 
 # Move files to correct ComfyUI directories
 os.makedirs("/app/models/diffusion_models", exist_ok=True)
