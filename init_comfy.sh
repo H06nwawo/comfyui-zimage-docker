@@ -67,8 +67,4 @@ shutil.move("/tmp/loras/zimage_uncensored.safetensors",
 print("All models ready!")
 EOF
 
-echo "Starting services via supervisord..."
-supervisorctl start comfyui
-sleep 5
-supervisorctl start websocket
-tail -f /dev/null
+echo "Models downloaded successfully"
