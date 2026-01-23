@@ -29,6 +29,8 @@ RUN cd /app/custom_nodes && \
     cd ComfyUI-SeedVR2_VideoUpscaler && \
     pip3 install --no-cache-dir -r requirements.txt
 
+RUN cd /app && python3 main.py --cpu --quick-test-for-ci
+
 COPY init_comfy.sh /app/init_comfy.sh
 RUN chmod +x /app/init_comfy.sh
 
