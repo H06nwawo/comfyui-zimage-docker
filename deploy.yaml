@@ -1,0 +1,48 @@
+---
+version: "2.0"
+
+services:
+  comfyui-websocket:
+    image: ghcr.io/h06nwawo/comfyui-zimage-websocket:latest
+    expose:
+      - port: 8188
+        as: 80
+        to:
+          - global: true
+      - port: 8765
+        as: 8765
+        to:
+          - global: true
+    env:
+      - CIVITAI_API_KEY=YOUR_CIVITAI_API_KEY_HERE
+      - HUGGING_FACE_HUB_TOKEN=YOUR_HF_TOKEN_HERE
+
+profiles:
+  compute:
+    comfyui-websocket:
+      resources:
+        cpu:
+          units: 8
+        memory:
+          size: 32Gi
+        gpu:
+          units: 1
+          attributes:
+            vendor:
+              nvidia:
+                - model: h200
+        storage:
+          - size: 100Gi
+
+  placement:
+    akash:
+      pricing:
+        comfyui-websocket:
+          denom: uakt
+          amount: 10000
+
+deployment:
+  comfyui-websocket:
+    akash:
+      profile: comfyui-websocket
+      count: 1
