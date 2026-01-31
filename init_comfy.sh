@@ -50,13 +50,13 @@ except Exception as e:
     print("Continuing without LoRA...")
 
 # Move files to correct ComfyUI directories
-os.makedirs("/app/models/diffusion_models", exist_ok=True)
+os.makedirs("/app/models/checkpoints", exist_ok=True)
 os.makedirs("/app/models/clip", exist_ok=True)
 os.makedirs("/app/models/vae", exist_ok=True)
 os.makedirs("/app/models/loras", exist_ok=True)
 
 shutil.move("/tmp/models/split_files/diffusion_models/z_image_turbo_bf16.safetensors",
-            "/app/models/diffusion_models/z_image_turbo_bf16.safetensors")
+            "/app/models/checkpoints/z_image_turbo_bf16.safetensors")
 shutil.move("/tmp/models/split_files/text_encoders/qwen_3_4b.safetensors",
             "/app/models/clip/qwen_3_4b.safetensors")
 shutil.move("/tmp/models/split_files/vae/ae.safetensors",
