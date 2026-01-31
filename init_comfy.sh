@@ -1,9 +1,7 @@
 #!/bin/bash
-
 set -e
 
 echo "Downloading Z-Image-Turbo model files..."
-
 pip3 install -q huggingface-hub
 
 python3 - <<EOF
@@ -41,10 +39,15 @@ hf_hub_download(
 
 print("Downloading uncensored LoRA from Civitai...")
 os.makedirs("/tmp/loras", exist_ok=True)
-lora_url = f"https://civitai.com/api/download/models/2474435?type=Model&format=SafeTensor&token={civitai_token}"
-req = urllib.request.Request(lora_url)
-with urllib.request.urlopen(req) as response, open("/tmp/loras/zimage_uncensored.safetensors", 'wb') as out_file:
-    out_file.write(response.read())
+try:
+    lora_url = f"https://civitai.com/api/download/models/2474435?type=Model&format=SafeTensor&token={civitai_token}"
+    req = urllib.request.Request(lora_url)
+    with urllib.request.urlopen(req) as response, open("/tmp/loras/zimage_uncensored.safetensors", 'wb') as out_file:
+        out_file.write(response.read())
+    print("LoRA downloaded successfully")
+except Exception as e:
+    print(f"Warning: LoRA download failed: {e}")
+    print("Continuing without LoRA...")
 
 # Move files to correct ComfyUI directories
 os.makedirs("/app/models/diffusion_models", exist_ok=True)
@@ -52,17 +55,17 @@ os.makedirs("/app/models/clip", exist_ok=True)
 os.makedirs("/app/models/vae", exist_ok=True)
 os.makedirs("/app/models/loras", exist_ok=True)
 
-shutil.move("/tmp/models/split_files/diffusion_models/z_image_turbo_bf16.safetensors", 
+shutil.move("/tmp/models/split_files/diffusion_models/z_image_turbo_bf16.safetensors",
             "/app/models/diffusion_models/z_image_turbo_bf16.safetensors")
-
-shutil.move("/tmp/models/split_files/text_encoders/qwen_3_4b.safetensors", 
+shutil.move("/tmp/models/split_files/text_encoders/qwen_3_4b.safetensors",
             "/app/models/clip/qwen_3_4b.safetensors")
-
-shutil.move("/tmp/models/split_files/vae/ae.safetensors", 
+shutil.move("/tmp/models/split_files/vae/ae.safetensors",
             "/app/models/vae/ae.safetensors")
 
-shutil.move("/tmp/loras/zimage_uncensored.safetensors",
-            "/app/models/loras/zimage_uncensored.safetensors")
+# Only move LoRA if it exists
+if os.path.exists("/tmp/loras/zimage_uncensored.safetensors"):
+    shutil.move("/tmp/loras/zimage_uncensored.safetensors",
+                "/app/models/loras/zimage_uncensored.safetensors")
 
 print("All models ready!")
 EOF
