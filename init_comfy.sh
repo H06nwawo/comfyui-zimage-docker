@@ -42,6 +42,7 @@ os.makedirs("/tmp/loras", exist_ok=True)
 try:
     lora_url = f"https://civitai.com/api/download/models/2474435?type=Model&format=SafeTensor&token={civitai_token}"
     req = urllib.request.Request(lora_url)
+    req.add_header('User-Agent', 'Mozilla/5.0')
     with urllib.request.urlopen(req) as response, open("/tmp/loras/zimage_uncensored.safetensors", 'wb') as out_file:
         out_file.write(response.read())
     print("LoRA downloaded successfully")
